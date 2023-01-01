@@ -164,7 +164,7 @@ class Solver(object):
             coord.request_stop()
             coord.join(threads)
 
-    def test(self):
+    def test(self, sum):
         if self.load_model():
             logger.info(' [*] Load SUCCESS!')
         else:
@@ -177,7 +177,7 @@ class Solver(object):
         iter_time = 0
         total_time = 0.
         try:
-            while iter_time < self.dataset.num_tests:
+            while iter_time < sum:
                 print(iter_time)
 
                 tic = time.time()
@@ -187,7 +187,7 @@ class Solver(object):
                 self.model.plots_test(imgs, img_names, self.test_out_dir, self.eval_out_dir, self.gt_out_dir)
                 iter_time += 1
 
-            logger.info('Avg. PT: {:.2f} msec.'.format(total_time / self.dataset.num_tests * 1000.))
+            logger.info('Avg. PT: {:.2f} msec.'.format(total_time / sum * 1000.))
 
         except KeyboardInterrupt:
             coord.request_stop()

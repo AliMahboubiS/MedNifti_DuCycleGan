@@ -7,9 +7,13 @@ import nibabel as nib
 import SimpleITK as sitk  
 from  PIL import Image
 
+def nii_to_sample(file, mode, idx):
 
-def nii_to_sample(file, mode):
-    save_to = 'dataset/'
+    origin = 'dataset'
+    if not os.path.exists(origin):
+        os.mkdir(origin)    # New Folder 
+
+    save_to = 'dataset/extracted/'
     if not os.path.exists(save_to):
         os.mkdir(save_to)    # New Folder 
     img = nib.load(file)    # Read nii
@@ -23,21 +27,26 @@ def nii_to_sample(file, mode):
         img_fdata = (img_fdata/np.max(img_fdata)) * 255   
     # Start converting to an image 
     (x,y,z) = img.shape
+    sumation =0
     for i in range(z):      #z Is a sequence of images 
         silce = img_fdata[:, :, i]   # You can choose which direction of slice 
         imageio.imwrite(os.path.join(save_to,'{}.png'.format(i)), silce)
-
+        sumation += 1 
+    print(sumation)
     # prepare for concantanation     
-    list_files = sorted(glob.glob(os.path.abspath("dataset/*.png")),  key=len)
+    list_files = sorted(glob.glob(os.path.abspath("dataset/extracted/*.png")),  key=len)
     index = 0
     output_dir = 'dataset/ready_oneSample/'
     if not os.path.exists(output_dir):
-        os.mkdir(output_dir)    # New Folder 
+        os.mkdir(output_dir)    # New Folder
+    
+    len_before =len(glob.glob(os.path.abspath("dataset/ready_oneSample/*.jpg"))) 
     for image_address in list_files:
-        output_file = output_dir + str(index) + ".jpg"
+        output_file = output_dir + str(index + len_before) + ".jpg"
         index += 1
         concat_Horizantal(image_address, image_address).save(output_file)
-
+    shutil.rmtree(os.path.abspath('dataset/extracted'))
+    return z
 def extract_predict(test_images):
     # Opens a image in RGB mode
     im = Image.open(test_images)
@@ -62,8 +71,7 @@ def concat_Horizantal(CT_img_dir, MR_img_dir):
     dst.paste(MR_img, (CT_img.width, 0))
     return dst
 
-
-def creat_nii(name_patient):
+def creat_nii(name_patient_list, z_size):
     list_files = sorted(glob.glob(os.path.abspath('DC2Anet_db/test/20221204-0200/*.jpg')),  key=len)
     index = 0
     output_file_dir = 'dataset/test_predict/'
@@ -76,12 +84,30 @@ def creat_nii(name_patient):
         extract_predict(image_address).save(output_file)
     
     # convert multiple file to nii.gz
+    create_nii_file(name_patient_list, z_size)
+
+def create_nii_file(name_patient_list,z_size):
+    # convert multiple file to nii.gz
     file_names = sorted(glob.glob(os.path.abspath('dataset/test_predict/*.jpg')),  key=len)
-    reader = sitk.ImageSeriesReader()
-    reader.SetFileNames(file_names)
-    vol = reader.Execute()
-    sitk.WriteImage(vol, os.path.abspath('nifti_res/pred_'+str(name_patient)))
+    xlen=len(name_patient_list)
+    summation = 0
+    for x in range(xlen):
+        slice_files =file_names[summation:(z_size[x]-1)+summation] 
+        summation =+ z_size[x]  
+        reader = sitk.ImageSeriesReader()
+        reader.SetFileNames(slice_files)
+        vol = reader.Execute()
+        sitk.WriteImage(vol, os.path.abspath('nifti_res/pred_'+str(name_patient_list[x])))
     shutil.rmtree(os.path.abspath('dataset'))
+
+def add_header(name_patient_list):
+    for name_patient in name_patient_list:
+        img = nib.load(os.path.abspath('DC2Anet_db/nifti_header_find/'+str(name_patient)))
+        gen_img = nib.load(os.path.abspath('nifti_res/pred_'+str(name_patient)))
+        data   = gen_img.get_data()
+        # header and affine(about spaces and image positions) from CT origin file 
+        clipped_img = nib.Nifti1Image(data, img.affine, img.header)
+        nib.save(clipped_img, 'nifti_res/pred_'+str(name_patient))
 
 if __name__ ==  '__main__':
 
