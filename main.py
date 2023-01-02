@@ -44,19 +44,6 @@ def main(_):
     solver = Solver(FLAGS)
     if FLAGS.is_train:
         solver.train() 
-    # if not FLAGS.is_train:
-    #     solver.test()
-    # if not FLAGS.is_train:
-    # # create nii to predicted nii
-    #     file_name  = glob.glob(os.path.abspath("DC2Anet_db/nifti_sample/*gz"))
-    #     for f in file_name:
-    #         f_split = f.split("\\")
-    #         name_patient = f_split[-1]
-    #         pu.nii_to_sample(f, 'ct')
-    #         data_writer(os.path.abspath("dataset/ready_oneSample"),"test")
-    #         solver.test()
-    #         pu.creat_nii(name_patient)
-    #         pu.add_header(name_patient)
     if not FLAGS.is_train:
         # create nii to predicted nii
         idx = 0
@@ -79,5 +66,4 @@ def main(_):
 
 
 if __name__ == '__main__':
-    # tf.app.run()
     tf.compat.v1.app.run()
