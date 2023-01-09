@@ -3,36 +3,37 @@ Convert CT 3D Nifti images to PET 3D NifTi file with Dual-CycleGan
 
 ## Description
 
-An in-depth paragraph about your project and overview of use.
+Computed tomography (CT) and positron emission tomography (PET) are both medical imaging techniques that allow doctors to view the inside of the body.
 
+A CT scan uses X-rays to create detailed images of the body, while a PET scan uses radioactive tracers to produce images of the body's tissues and organs. CT scans are typically used to visualize the structure of the body's organs, while PET scans are used to visualize the function of the body's organs.
+
+Both CT and PET scans can be used to diagnose a wide range of medical conditions, including cancer, heart disease, and neurological disorders. They are often used in conjunction with other diagnostic tests to help doctors make a diagnosis and determine the best course of treatment.
 ## Getting Started
 
 ### Dependencies
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
-
-*imageio==2.22.4
-*matplotlib==3.5.3
-*nibabel==4.0.2
-
-*numpy==1.21.6
-*opencv_python==4.1.0.25
-*Pillow==9.3.0
-*scipy==1.7.3
-*SimpleITK==2.2.1
-*tensorflow==1.14.0
+* prerequisites, libraries, OS version, etc., needed before installing program.
+* tensorflow==1.14.0
+* imageio==2.22.4
+* matplotlib==3.5.3
+* nibabel==4.0.2
+* numpy==1.21.6
+* opencv_python==4.1.0.25
+* Pillow==9.3.0
+* scipy==1.7.3
+* SimpleITK==2.2.1
 
 ### Installing
 
-* How/where to download your program
-* Any modifications needed to be made to files/folders
+* first of all you should install requirments with code below:
+```
+pip install -r requiremnets.txt
+```
+
 
 ### Executing program
-
-* How to run the program
-* Step-by-step bullets
+for running the code you should use main.py file and run it.
 ```
-code blocks for commands
+python main.py
 ```
 
 ## Help
@@ -46,26 +47,16 @@ command to run if program contains helper info
 
 Contributors names and contact info
 
-ex. Dominique Pizzie  
-ex. [@DomPizzie](https://twitter.com/dompizzie)
+Ali Mahboubisarighieh
+mahboubi.ali1991@gmail.com
 
 ## Version History
 
-* 0.2
-    * Various bug fixes and optimizations
-    * See [commit change]() or See [release history]()
 * 0.1
     * Initial Release
 
 ## License
 
-This project is licensed under the [NAME HERE] License - see the LICENSE.md file for details
+This project is licensed under the AliMahboubi License - see the LICENSE.md file for details
 
-## Acknowledgments
 
-Inspiration, code snippets, etc.
-* [awesome-readme](https://github.com/matiassingers/awesome-readme)
-* [PurpleBooth](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)
-* [dbader](https://github.com/dbader/readme-template)
-* [zenorocha](https://gist.github.com/zenorocha/4526327)
-* [fvcproductions](https://gist.github.com/fvcproductions/1bfc2d4aecb01a834b46)
