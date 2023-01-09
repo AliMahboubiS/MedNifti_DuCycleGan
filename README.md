@@ -36,13 +36,6 @@ for running the code you should use main.py file and run it.
 python main.py
 ```
 
-## Help
-
-Any advise for common problems or issues.
-```
-command to run if program contains helper info
-```
-
 ## Authors
 
 Contributors names and contact info
