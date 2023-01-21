@@ -7,34 +7,53 @@ import nibabel as nib
 import SimpleITK as sitk  
 from  PIL import Image
 
-def nii_to_sample(file, mode, idx):
+def nii_to_sample(filename, mode, idx):
 
+    file ="DC2Anet_db/nifti_sample/CT/" + filename
+    file_PET = "DC2Anet_db/nifti_sample/PET/" + filename
     origin = 'dataset'
     if not os.path.exists(origin):
         os.mkdir(origin)    # New Folder 
 
-    save_to = 'dataset/extracted/'
-    if not os.path.exists(save_to):
-        os.mkdir(save_to)    # New Folder 
-    img = nib.load(file)    # Read nii
+    save_tos = 'dataset/extracted'
+    if not os.path.exists(save_tos):
+        os.mkdir(save_tos)    # New Folder
 
+    save_to = 'dataset/extracted/CT'
+    if not os.path.exists(save_to):
+        os.mkdir(save_to)    # New Folder
+
+    save_to_PET = 'dataset/extracted/PET'
+    if not os.path.exists(save_to_PET):
+        os.mkdir(save_to_PET)    # New Folder  
+    img     = nib.load(file)    # Read nii
+    img_PET = nib.load(file_PET)    # Read nii
+    
     header = img.header
     img_fdata = img.get_fdata()
+    img_fdata_PET = img_PET.get_fdata()
 
     # Contrast
     if mode == 'ct':
         img_fdata = img_fdata - np.min(img_fdata)
-        img_fdata = (img_fdata/np.max(img_fdata)) * 255   
+        img_fdata = (img_fdata/np.max(img_fdata)) * 255
+        
+        img_fdata_PET = img_fdata_PET - np.min(img_fdata_PET)
+        img_fdata_PET = (img_fdata_PET/np.max(img_fdata_PET)) * 255  
     # Start converting to an image 
     (x,y,z) = img.shape
     sumation =0
     for i in range(z):      #z Is a sequence of images 
         silce = img_fdata[:, :, i]   # You can choose which direction of slice 
         imageio.imwrite(os.path.join(save_to,'{}.png'.format(i)), silce)
+
+        silce_PET = img_fdata_PET[:, :, i]   # You can choose which direction of slice 
+        imageio.imwrite(os.path.join(save_to_PET,'{}.png'.format(i)), silce_PET)
+    
         sumation += 1 
     print(sumation)
     # prepare for concantanation     
-    list_files = sorted(glob.glob(os.path.abspath("dataset/extracted/*.png")),  key=len)
+    list_files = sorted(glob.glob(os.path.abspath("dataset/extracted/CT/*.png")),  key=len)
     index = 0
     output_dir = 'dataset/ready_oneSample/'
     if not os.path.exists(output_dir):
@@ -42,9 +61,13 @@ def nii_to_sample(file, mode, idx):
     
     len_before =len(glob.glob(os.path.abspath("dataset/ready_oneSample/*.jpg"))) 
     for image_address in list_files:
+        img_addr = image_address.split("\\")
+        img_name = img_addr[-1]
         output_file = output_dir + str(index + len_before) + ".jpg"
         index += 1
-        concat_Horizantal(image_address, image_address).save(output_file)
+        CT_addres ='dataset/extracted/CT/'+img_name 
+        PET_addres ='dataset/extracted/PET/'+ img_name
+        concat_Horizantal(CT_addres, PET_addres).save(output_file)
     shutil.rmtree(os.path.abspath('dataset/extracted'))
     return z
 def extract_predict(test_images):
