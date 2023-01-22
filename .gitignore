@@ -1,0 +1,5 @@
+dataset/*
+nifti_res/*
+DC2Anet_db/*
+__pycache__/*
+models_zoo/*
