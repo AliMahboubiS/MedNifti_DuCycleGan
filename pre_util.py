@@ -13,19 +13,9 @@ def nii_to_sample(filename, mode, idx):
     file_PET = "DC2Anet_db/nifti_sample/PET/" + filename
     origin = 'dataset'
     if not os.path.exists(origin):
-        os.mkdir(origin)    # New Folder 
+        os.makedirs("dataset/extracted/CT", exist_ok=True)
+        os.makedirs("dataset/extracted/PET", exist_ok=True)
 
-    save_tos = 'dataset/extracted'
-    if not os.path.exists(save_tos):
-        os.mkdir(save_tos)    # New Folder
-
-    save_to = 'dataset/extracted/CT'
-    if not os.path.exists(save_to):
-        os.mkdir(save_to)    # New Folder
-
-    save_to_PET = 'dataset/extracted/PET'
-    if not os.path.exists(save_to_PET):
-        os.mkdir(save_to_PET)    # New Folder  
     img     = nib.load(file)    # Read nii
     img_PET = nib.load(file_PET)    # Read nii
     
