@@ -11,7 +11,7 @@ Both CT and PET scans can be used to diagnose a wide range of medical conditions
 ## Getting Started
 
 ### Dependencies
-* prerequisites, libraries, OS version, etc., needed before installing program.
+* prerequisites, libraries, etc., needed before installing program.
 * tensorflow==1.14.0
 * imageio==2.22.4
 * matplotlib==3.5.3
